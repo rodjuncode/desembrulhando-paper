@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- style -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- lib -->
+    <script type="text/javascript" src="paper.js"></script>
+    <script type="text/javascript" src="opentype.js"></script>
+    <script type="text/javascript">
+
+      const fontPath = 'OpenSans-Light.ttf'; 
+      const glyph = 'a';
+
+      window.onload = function() {
+        opentype.load(fontPath, function(err, font) {
+            if (err) {
+                alert('Font could not be loaded: ' + err);
+            } else {
+                const _otPath = font.getPath(glyph, 0, 0, 1000);
+                var _otSVG = _otPath.toSVG();
+                _otSVG = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg">' + _otSVG + '</svg>';
+
+                var canvas = document.getElementById('36daysoftype');
+                var scope = paper.setup(canvas);
+                var importedGlyph;
+
+                var rect = new paper.Path.Rectangle({
+                  point: [0, 0],
+                  size: [paper.view.size.width, paper.view.size.height],
+                });               
+
+                paper.project.importSVG(_otSVG, function(item) {
+                  importedGlyph = item;
+                  importedGlyph.position = new paper.Point(paper.view.size.width/2,paper.view.size.height/2);                  
+                });
+
+                var path = rect.intersect(importedGlyph);
+                path.fullySelected = true;
+                path.fillColor = '#000';
+                
+                importedGlyph.visible = false;
+                rect.visible = false;
+
+                
+
+                
+                // paper.view.onMouseMove = function(event) {
+                //   //path.position = event.point;
+                //   var point = event.point.clone();
+                // 	var deltaX = point.x - paper.view.center.x;                  
+                //   var deltaY = point.y - paper.view.center.y; 
+                //   for (var i = 0; i < path.curves.length; i++) {
+                //     var curve = path.curves[i];
+                //     curve.handle1.y = curve.handle2.y = deltaY;  
+                //     curve.handle1.x = curve.handle2.x = deltaX;  
+                    
+                //   }
+		            // }
+
+
+             }
+         });
+
+      }
+    </script>    
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <canvas id="36daysoftype"></canvas>
+  </body>
+</html>
